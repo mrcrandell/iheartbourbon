@@ -1,0 +1,85 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  name      String
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+
+  // Relationships
+  entries       Entry[]
+  bourbons      Bourbon[]
+  createdGroups Group[]       @relation("GroupCreator")
+  groupMembers  GroupMember[]
+}
+
+model Bourbon {
+  id              String   @id @default(uuid())
+  name            String
+  imageUrl        String?
+  createdByUserId String
+  createdAt       DateTime @default(now()) @db.Timestamptz()
+  updatedAt       DateTime @updatedAt @db.Timestamptz()
+
+  // Relationships
+  createdBy User    @relation(fields: [createdByUserId], references: [id], onDelete: Cascade)
+  entries   Entry[]
+}
+
+model Entry {
+  id              String   @id @default(uuid())
+  userId          String
+  bourbonId       String
+  isThumbsUp      Boolean
+  rating          Int
+  comment         String   @db.Text
+  createdAt       DateTime @default(now()) @db.Timestamptz()
+  updatedAt       DateTime @updatedAt @db.Timestamptz()
+
+  // Relationships
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bourbon Bourbon @relation(fields: [bourbonId], references: [id], onDelete: Cascade)
+  groups  Group[]
+}
+
+model Group {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  creatorId String
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+
+  // Relationships
+  creator User          @relation("GroupCreator", fields: [creatorId], references: [id])
+  members GroupMember[]
+  entries Entry[]
+}
+
+model GroupMember {
+  id        String   @id @default(uuid())
+  userId    String
+  groupId   String
+  role      String   @default("MEMBER")
+  createdAt DateTime @default(now()) @db.Timestamptz()
+  updatedAt DateTime @updatedAt @db.Timestamptz()
+
+  // Relationships
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  group Group @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, groupId])
+}
