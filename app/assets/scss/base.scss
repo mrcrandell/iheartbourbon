@@ -1,0 +1,49 @@
+@use "_variables.scss" as *;
+@use "_functions.scss" as *;
+@use "_mixins.scss" as *;
+
+@use "@/assets/scss/_root.scss" as *;
+@use "@/assets/scss/_reboot.scss" as *;
+@use "@/assets/scss/_buttons.scss" as *;
+@use "@/assets/scss/_forms.scss" as *;
+@use "@/assets/scss/_cards.scss" as *;
+@use "@/assets/scss/_tables.scss" as *;
+// @use "@/assets/scss/_dropdowns.scss" as *;
+@use "@/assets/scss/_alerts.scss" as *;
+
+body,
+body > #__nuxt,
+#__nuxt > div {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+body {
+  // background: $old-lace url("@/assets/img/old-lace-bg.jpg");
+  background: $old-lace;
+}
+
+.content {
+  padding: rem(32);
+}
+
+.lead {
+  @include font-size(rem(20));
+  font-weight: 300;
+  @include bp-md-tablet {
+    font-size: #{rem(24)};
+  }
+}
+
+// Utility classes
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}

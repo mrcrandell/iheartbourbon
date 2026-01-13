@@ -1,0 +1,259 @@
+@use "_variables.scss" as *;
+@use "_mixins.scss" as *;
+
+//
+// Base styles
+//
+
+.card {
+  // CSS custom properties
+  --card-spacer-y: #{$card-spacer-y};
+  --card-spacer-x: #{$card-spacer-x};
+  --card-title-spacer-y: #{$card-title-spacer-y};
+  --card-title-color: #{$card-title-color};
+  --card-subtitle-color: #{$card-subtitle-color};
+  --card-border-width: #{$card-border-width};
+  --card-border-color: #{$card-border-color};
+  --card-border-radius: #{$card-border-radius};
+  --card-box-shadow: #{$card-box-shadow};
+  --card-inner-border-radius: #{$card-inner-border-radius};
+  --card-cap-padding-y: #{$card-cap-padding-y};
+  --card-cap-padding-x: #{$card-cap-padding-x};
+  --card-cap-bg: #{$card-cap-bg};
+  --card-cap-color: #{$card-cap-color};
+  --card-height: #{$card-height};
+  --card-color: #{$card-color};
+  --card-bg: #{$card-bg};
+  --card-img-overlay-padding: #{$card-img-overlay-padding};
+  --card-group-margin: #{$card-group-margin};
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; // See https://github.com/twbs/bootstrap/pull/22740#issuecomment-305868106
+  height: var(--card-height);
+  color: var(--body-color);
+  word-wrap: break-word;
+  background-color: #fff; // Your custom background color takes precedence
+  background-clip: border-box;
+  border: 1px solid $emporor; // Your custom border takes precedence
+  border-radius: var(--card-border-radius);
+  @include shadow-1(); // Your custom shadow takes precedence
+
+  > hr {
+    margin-right: 0;
+    margin-left: 0;
+  }
+
+  > .list-group {
+    border-top: inherit;
+    border-bottom: inherit;
+
+    &:first-child {
+      border-top-width: 0;
+      border-top-left-radius: var(--card-inner-border-radius);
+      border-top-right-radius: var(--card-inner-border-radius);
+    }
+
+    &:last-child {
+      border-bottom-width: 0;
+      border-bottom-right-radius: var(--card-inner-border-radius);
+      border-bottom-left-radius: var(--card-inner-border-radius);
+    }
+  }
+
+  // Due to specificity of the above selector (`.card > .list-group`), we must
+  // use a child selector here to prevent double borders.
+  > .card-header + .list-group,
+  > .list-group + .card-footer {
+    border-top: 0;
+  }
+
+  .card-header {
+    background-color: $cerulean; // Your custom styles take precedence
+    border-color: $emporor;
+    color: #fff;
+    font-size: 1.5rem; // 24px
+    font-weight: 400;
+  }
+}
+
+.card-body {
+  // Enable `flex-grow: 1` for decks and groups so that card blocks take up
+  // as much space as possible, ensuring footers are aligned to the bottom.
+  flex: 1 1 auto;
+  padding: var(--card-spacer-y) var(--card-spacer-x);
+  color: var(--card-color);
+}
+
+.card-title {
+  margin-bottom: var(--card-title-spacer-y);
+  color: var(--card-title-color);
+}
+
+.card-subtitle {
+  margin-top: calc(-0.5 * var(--card-title-spacer-y));
+  margin-bottom: 0;
+  color: var(--card-subtitle-color);
+}
+
+.card-text:last-child {
+  margin-bottom: 0;
+}
+
+.card-link {
+  @if $link-hover-decoration == underline {
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  + .card-link {
+    margin-left: var(--card-spacer-x);
+  }
+}
+
+//
+// Optional textual caps
+//
+
+.card-header {
+  padding: var(--card-cap-padding-y) var(--card-cap-padding-x);
+  margin-bottom: 0; // Removes the default margin-bottom of <hN>
+  color: var(--card-cap-color);
+  background-color: var(--card-cap-bg);
+  border-bottom: var(--card-border-width) solid var(--card-border-color);
+
+  &:first-child {
+    border-top-left-radius: var(--card-inner-border-radius);
+    border-top-right-radius: var(--card-inner-border-radius);
+  }
+
+  // Your custom styles override the defaults
+  background-color: $cerulean;
+  border-color: $emporor;
+  color: #fff;
+  font-size: 1.5rem; // 24px
+  font-weight: 400;
+}
+
+.card-footer {
+  padding: var(--card-cap-padding-y) var(--card-cap-padding-x);
+  color: var(--card-cap-color);
+  background-color: var(--card-cap-bg);
+  border-top: var(--card-border-width) solid var(--card-border-color);
+
+  &:last-child {
+    border-bottom-right-radius: var(--card-inner-border-radius);
+    border-bottom-left-radius: var(--card-inner-border-radius);
+  }
+}
+
+//
+// Header navs
+//
+
+.card-header-tabs {
+  margin-right: calc(-0.5 * var(--card-cap-padding-x));
+  margin-bottom: calc(-1 * var(--card-cap-padding-y));
+  margin-left: calc(-0.5 * var(--card-cap-padding-x));
+  border-bottom: 0;
+
+  .nav-link.active {
+    background-color: var(--card-bg);
+    border-bottom-color: var(--card-bg);
+  }
+}
+
+.card-header-pills {
+  margin-right: calc(-0.5 * var(--card-cap-padding-x));
+  margin-left: calc(-0.5 * var(--card-cap-padding-x));
+}
+
+// Card image
+.card-img-overlay {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  padding: var(--card-img-overlay-padding);
+  border-radius: var(--card-inner-border-radius);
+}
+
+.card-img,
+.card-img-top,
+.card-img-bottom {
+  width: 100%; // Required because we use flexbox and this inherently applies align-self: stretch
+}
+
+.card-img,
+.card-img-top {
+  border-top-left-radius: var(--card-inner-border-radius);
+  border-top-right-radius: var(--card-inner-border-radius);
+}
+
+.card-img,
+.card-img-bottom {
+  border-bottom-right-radius: var(--card-inner-border-radius);
+  border-bottom-left-radius: var(--card-inner-border-radius);
+}
+
+//
+// Card groups
+//
+
+.card-group {
+  // The child selector allows nested `.card` within `.card-group`
+  // to display properly.
+  > .card {
+    margin-bottom: var(--card-group-margin);
+  }
+
+  @media (min-width: 576px) {
+    display: flex;
+    flex-flow: row wrap;
+    // The child selector allows nested `.card` within `.card-group`
+    // to display properly.
+    > .card {
+      flex: 1 0 0;
+      margin-bottom: 0;
+
+      + .card {
+        margin-left: 0;
+        border-left: 0;
+      }
+
+      // Handle rounded corners
+      @if $enable-rounded {
+        &:not(:last-child) {
+          border-top-right-radius: 0;
+          border-bottom-right-radius: 0;
+
+          > .card-img-top,
+          > .card-header {
+            border-top-right-radius: 0;
+          }
+          > .card-img-bottom,
+          > .card-footer {
+            border-bottom-right-radius: 0;
+          }
+        }
+
+        &:not(:first-child) {
+          border-top-left-radius: 0;
+          border-bottom-left-radius: 0;
+
+          > .card-img-top,
+          > .card-header {
+            border-top-left-radius: 0;
+          }
+          > .card-img-bottom,
+          > .card-footer {
+            border-bottom-left-radius: 0;
+          }
+        }
+      }
+    }
+  }
+}

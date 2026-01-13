@@ -1,0 +1,118 @@
+@use "sass:color";
+@use "sass:meta";
+@use "_variables.scss" as *;
+@use "_functions.scss" as *;
+@use "_mixins.scss" as *;
+
+:root {
+  @each $color, $value in $grays {
+    --gray-#{$color}: #{$value};
+  }
+
+  @each $color, $value in $colors {
+    --#{$color}: #{$value};
+  }
+
+  @each $color, $value in $theme-colors {
+    --#{$color}: #{$value};
+  }
+
+  --white: #{$white};
+  --black: #{$black};
+
+  --white-rgb: #{to-rgb($white)};
+  --black-rgb: #{to-rgb($black)};
+
+  --body-color: #{$body-color};
+  --body-color-rgb: #{to-rgb($body-color)};
+  --body-bg: #{$body-bg};
+  --body-bg-rgb: #{to-rgb($body-bg)};
+  --emphasis-color: #{$body-emphasis-color};
+  --emphasis-color-rgb: #{to-rgb($body-emphasis-color)};
+  --secondary-color: #{$body-secondary-color};
+  --secondary-bg: #{$body-secondary-bg};
+  --tertiary-color: #{$body-tertiary-color};
+  --tertiary-bg: #{$body-tertiary-bg};
+  --text-muted: #{$gray-600};
+
+  --link-color: #{$link-color};
+  --link-color-rgb: #{to-rgb($link-color)};
+  --link-hover-color: #{$link-hover-color};
+  --link-hover-color-rgb: #{to-rgb($link-hover-color)};
+
+  --primary: #{$primary};
+  --primary-rgb: #{to-rgb($primary)};
+  --secondary: #{$secondary};
+  --secondary-rgb: #{to-rgb($secondary)};
+  --success: #{$success};
+  --success-rgb: #{to-rgb($success)};
+  --info: #{$info};
+  --info-rgb: #{to-rgb($info)};
+  --warning: #{$warning};
+  --warning-rgb: #{to-rgb($warning)};
+  --danger: #{$danger};
+  --danger-rgb: #{to-rgb($danger)};
+  --light: #{$light};
+  --light-rgb: #{to-rgb($light)};
+  --dark: #{$dark};
+  --dark-rgb: #{to-rgb($dark)};
+
+  // Card variables
+  --card-spacer-y: #{$card-spacer-y};
+  --card-spacer-x: #{$card-spacer-x};
+  --card-title-spacer-y: #{$card-title-spacer-y};
+  --card-title-color: #{$card-title-color};
+  --card-subtitle-color: #{$card-subtitle-color};
+  --card-border-width: #{$border-width};
+  --card-border-color: #{$border-color-translucent};
+  --card-border-radius: #{$border-radius};
+  --card-box-shadow: #{$card-box-shadow};
+  --card-inner-border-radius: calc(#{$border-radius} - #{$border-width});
+  --card-cap-padding-y: #{$card-cap-padding-y};
+  --card-cap-padding-x: #{$card-cap-padding-x};
+  --card-cap-bg: rgba(#{to-rgb($body-color)}, 0.03);
+  --card-cap-color: #{$card-cap-color};
+  --card-height: #{$card-height};
+  --card-color: #{$card-color};
+  --card-bg: #{$body-bg};
+  --card-img-overlay-padding: #{$card-img-overlay-padding};
+  --card-group-margin: #{$card-group-margin};
+
+  // Fonts
+
+  // Note: Use `inspect` for lists so that quoted items keep the quotes.
+  // See https://github.com/sass/sass/issues/2383#issuecomment-336349172
+  --font-sans-serif: #{meta.inspect($font-family-sans-serif)};
+  // --font-monospace: #{meta.inspect($font-family-monospace)};
+  // --gradient: #{$gradient};
+
+  // Root and body
+  // scss-docs-start root-body-variables
+  @if $font-size-root != null {
+    --root-font-size: #{$font-size-root};
+  }
+  --body-font-family: #{meta.inspect($font-family-base)};
+  @include rfs($font-size-base, --body-font-size);
+  --body-font-weight: #{$font-weight-base};
+  --body-line-height: #{$line-height-base};
+  --headings-font-family: #{meta.inspect($headings-font-family)};
+
+  --border-width: #{$border-width};
+  --border-style: #{$border-style};
+  --border-color: #{$border-color};
+  --border-color-translucent: #{$border-color-translucent};
+
+  --border-radius: #{$border-radius};
+  --border-radius-sm: #{$border-radius-sm};
+  --border-radius-lg: #{$border-radius-lg};
+  --border-radius-xl: #{$border-radius-xl};
+  --border-radius-xxl: #{$border-radius-xxl};
+
+  --btn-primary-border-color: #{$swamp};
+  --btn-primary-hover-border-color: #{shade-color($deep_cerulean, 15%)};
+
+  --form-valid-color: #{$form-valid-color};
+  --form-valid-border-color: #{$form-valid-border-color};
+  --form-invalid-color: #{$form-invalid-color};
+  --form-invalid-border-color: #{$form-invalid-border-color};
+}

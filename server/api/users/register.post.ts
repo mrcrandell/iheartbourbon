@@ -1,16 +1,20 @@
 import { prisma } from "../../../server/utils/prisma";
 import bcrypt from "bcrypt";
+import { registrationSchema } from "~/utils/schemas";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
-  const { email, password, name } = body;
 
-  if (!email || !password || !name) {
+  // Validate body with Joi
+  const { error, value } = registrationSchema.validate(body);
+  if (error) {
     throw createError({
       statusCode: 400,
-      statusMessage: "Email, password, and name are required",
+      statusMessage: error.message,
     });
   }
+
+  const { email, password, name } = value;
 
   // Check if user already exists
   const existingUser = await prisma.user.findUnique({
