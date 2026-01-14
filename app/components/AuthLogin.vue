@@ -5,7 +5,6 @@ import type { ValidationErrorItem } from "joi";
 const emit = defineEmits(["success"]);
 
 const form = ref({
-  name: "",
   email: "",
   password: "",
 });
@@ -35,7 +34,7 @@ async function submitForm() {
   isLoading.value = true;
   alert.value.show = false;
 
-  const { error } = registrationValidation.validate(form.value, {
+  const { error } = loginValidation.validate(form.value, {
     abortEarly: false,
   });
 
@@ -46,7 +45,7 @@ async function submitForm() {
   }
 
   try {
-    await $fetch("/api/users/register", {
+    await $fetch("/api/users/login", {
       method: "POST",
       body: form.value,
     });
@@ -54,7 +53,7 @@ async function submitForm() {
     alert.value = {
       show: true,
       status: "success",
-      message: "Account created successfully!",
+      message: "Logged in successfully!",
     };
     emit("success");
     // Reload to refresh session
@@ -64,7 +63,7 @@ async function submitForm() {
     alert.value = {
       show: true,
       status: "danger",
-      message: error.data?.statusMessage || "Registration failed.",
+      message: error.data?.statusMessage || "Invalid credentials.",
     };
   } finally {
     isLoading.value = false;
@@ -73,7 +72,7 @@ async function submitForm() {
 </script>
 
 <template>
-  <div class="auth-register">
+  <div class="auth-login">
     <div class="social-login">
       <a href="/auth/google" class="btn btn-social btn-google">
         Sign in with Google
@@ -96,27 +95,14 @@ async function submitForm() {
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="name">Name</label>
-        <input
-          id="name"
-          v-model="form.name"
-          type="text"
-          class="form-control"
-          :class="{ 'is-invalid': errors.name }"
-        />
-        <div v-if="errors.name" class="invalid-feedback">
-          {{ errors.name }}
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label" for="email">Email</label>
+        <label class="form-label" for="email">Email address</label>
         <input
           id="email"
           v-model="form.email"
           type="email"
           class="form-control"
           :class="{ 'is-invalid': errors.email }"
+          placeholder="Enter your email"
         />
         <div v-if="errors.email" class="invalid-feedback">
           {{ errors.email }}
@@ -131,6 +117,7 @@ async function submitForm() {
           type="password"
           class="form-control"
           :class="{ 'is-invalid': errors.password }"
+          placeholder="Enter your password"
         />
         <div v-if="errors.password" class="invalid-feedback">
           {{ errors.password }}
@@ -143,7 +130,7 @@ async function submitForm() {
           class="btn btn-primary w-100"
           :disabled="isLoading"
         >
-          {{ isLoading ? "Creating Account..." : "Create Account" }}
+          {{ isLoading ? "Logging in..." : "Log In" }}
         </button>
       </div>
     </form>
@@ -151,7 +138,7 @@ async function submitForm() {
 </template>
 
 <style lang="scss" scoped>
-.auth-register {
+.auth-login {
   padding: 1rem;
 }
 
@@ -180,10 +167,6 @@ async function submitForm() {
   }
 }
 
-.btn-google {
-  // Add specific branding colors if desired
-}
-
 .divider {
   display: flex;
   align-items: center;
@@ -207,6 +190,14 @@ async function submitForm() {
 
 .form-group {
   margin-bottom: 1rem;
+}
+
+.invalid-feedback {
+  display: block;
+  width: 100%;
+  margin-top: 0.25rem;
+  font-size: 0.875em;
+  color: $danger;
 }
 
 .w-100 {

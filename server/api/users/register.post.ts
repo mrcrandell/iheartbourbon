@@ -1,6 +1,5 @@
 import { prisma } from "../../../server/utils/prisma";
 import bcrypt from "bcrypt";
-import { registrationSchema } from "~/utils/schemas";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);

@@ -1,14 +1,16 @@
 <script setup lang="ts">
 import { ref } from "vue";
 
-const isRegisterModalOpen = ref(false);
+const isAuthModalOpen = ref(false);
+const authTab = ref<"login" | "register">("login");
 
-function openRegisterModal() {
-  isRegisterModalOpen.value = true;
+function openAuthModal(tab: "login" | "register") {
+  authTab.value = tab;
+  isAuthModalOpen.value = true;
 }
 
-function closeRegisterModal() {
-  isRegisterModalOpen.value = false;
+function closeAuthModal() {
+  isAuthModalOpen.value = false;
 }
 </script>
 
@@ -28,18 +30,39 @@ function closeRegisterModal() {
         <a class="nav-link" href="#about-us">About Us</a>
       </li>
       <li class="nav-item">
-        <button class="nav-link btn-link" @click="openRegisterModal">
+        <button class="nav-link btn-link" @click="openAuthModal('login')">
+          Login
+        </button>
+      </li>
+      <li class="nav-item">
+        <button class="nav-link btn-link" @click="openAuthModal('register')">
           Register
         </button>
       </li>
     </ul>
 
-    <BaseModal :is-shown="isRegisterModalOpen" @closed="closeRegisterModal">
+    <BaseModal :is-shown="isAuthModalOpen" @closed="closeAuthModal">
       <template #header>
-        <h3>Register</h3>
-        <button class="btn-close" @click="closeRegisterModal">X</button>
+        <div class="auth-tabs">
+          <button
+            class="tab-btn"
+            :class="{ active: authTab === 'login' }"
+            @click="authTab = 'login'"
+          >
+            Login
+          </button>
+          <button
+            class="tab-btn"
+            :class="{ active: authTab === 'register' }"
+            @click="authTab = 'register'"
+          >
+            Register
+          </button>
+        </div>
+        <button class="btn-close" @click="closeAuthModal">X</button>
       </template>
-      <AuthRegister @success="closeRegisterModal" />
+      <AuthLogin v-if="authTab === 'login'" @success="closeAuthModal" />
+      <AuthRegister v-else @success="closeAuthModal" />
     </BaseModal>
   </nav>
 </template>
@@ -53,6 +76,34 @@ button.nav-link {
   cursor: pointer;
   font-family: inherit;
   font-size: inherit;
+}
+
+.auth-tabs {
+  display: flex;
+  gap: 1.5rem;
+
+  .tab-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    opacity: 0.5;
+    padding: 0;
+    padding-bottom: 0.25rem;
+    border-bottom: 3px solid transparent;
+    transition: all 0.2s ease;
+
+    &:hover {
+      opacity: 0.8;
+    }
+
+    &.active {
+      opacity: 1;
+      border-bottom-color: $deep_cerulean;
+      color: $deep_cerulean;
+    }
+  }
 }
 
 .btn-close {
