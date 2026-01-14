@@ -1,6 +1,23 @@
 <script setup lang="ts">
+import { useAuthStore } from "~/stores/auth";
+
 const route = useRoute();
 const errorMessage = computed(() => route.query.error);
+
+const { user } = useUserSession();
+const authStore = useAuthStore();
+
+watch(
+  user,
+  (newUser) => {
+    if (newUser) {
+      authStore.setUser(newUser as any);
+    } else {
+      authStore.logout();
+    }
+  },
+  { immediate: true },
+);
 </script>
 
 <template>

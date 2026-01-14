@@ -1,5 +1,9 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { useAuthStore } from "~/stores/auth";
+const { loggedIn, user, session, fetch, clear, openInPopup } = useUserSession();
+
+const authStore = useAuthStore();
+const router = useRouter();
 
 const isAuthModalOpen = ref(false);
 const authTab = ref<"login" | "register">("login");
@@ -12,6 +16,16 @@ function openAuthModal(tab: "login" | "register") {
 function closeAuthModal() {
   isAuthModalOpen.value = false;
 }
+
+function handleLogout() {
+  authStore.logout();
+  clear();
+  // router.push("/admin-login");
+}
+
+onMounted(() => {
+  console.log(authStore.user);
+});
 </script>
 
 <template>
@@ -29,15 +43,19 @@ function closeAuthModal() {
       <li class="nav-item">
         <a class="nav-link" href="#about-us">About Us</a>
       </li>
-      <li class="nav-item">
+      <li v-if="!authStore.isAuthenticated" class="nav-item">
         <button class="nav-link btn-link" @click="openAuthModal('login')">
           Login
         </button>
       </li>
-      <li class="nav-item">
+      <li v-if="!authStore.isAuthenticated" class="nav-item">
         <button class="nav-link btn-link" @click="openAuthModal('register')">
           Register
         </button>
+      </li>
+      <li>{{ authStore.user }} {{ user }}</li>
+      <li v-if="authStore.isAuthenticated">
+        <button class="dropdown-item" @click="handleLogout">Logout</button>
       </li>
     </ul>
 

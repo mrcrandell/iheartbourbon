@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import type { ValidationErrorItem } from "joi";
+import { useAuthStore } from "~/stores/auth";
 
 const emit = defineEmits(["success"]);
+const authStore = useAuthStore();
 
 const form = ref({
   name: "",
@@ -46,10 +48,12 @@ async function submitForm() {
   }
 
   try {
-    await $fetch("/api/users/register", {
+    const { user } = await $fetch<{ user: any }>("/api/users/register", {
       method: "POST",
       body: form.value,
     });
+
+    authStore.login(user);
 
     alert.value = {
       show: true,
