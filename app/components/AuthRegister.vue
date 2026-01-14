@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
+import type { ValidationErrorItem } from "joi";
 import { registrationSchema } from "../utils/schemas";
 
 const emit = defineEmits(["success"]);
@@ -17,13 +18,15 @@ const alert = ref({
 });
 
 const isLoading = ref(false);
-const errorsRaw = ref<any[]>([]);
+const errorsRaw = ref<ValidationErrorItem[]>([]);
 
 const errors = computed(() => {
   const errs: Record<string, string> = {};
   errorsRaw.value.forEach((error) => {
     const [field] = error.path;
-    errs[field] = error.message;
+    if (field) {
+      errs[String(field)] = error.message;
+    }
   });
   return errs;
 });
@@ -57,11 +60,12 @@ async function submitForm() {
     emit("success");
     // Reload to refresh session
     window.location.reload();
-  } catch (err: any) {
+  } catch (err: unknown) {
+    const error = err as { data?: { statusMessage?: string } };
     alert.value = {
       show: true,
       status: "danger",
-      message: err.data?.statusMessage || "Registration failed.",
+      message: error.data?.statusMessage || "Registration failed.",
     };
   } finally {
     isLoading.value = false;
@@ -78,9 +82,9 @@ async function submitForm() {
       <a href="/auth/facebook" class="btn btn-social btn-facebook">
         Sign in with Facebook
       </a>
-      <a href="/auth/apple" class="btn btn-social btn-apple">
+      <!-- <a href="/auth/apple" class="btn btn-social btn-apple">
         Sign in with Apple
-      </a>
+      </a> -->
     </div>
 
     <div class="divider">

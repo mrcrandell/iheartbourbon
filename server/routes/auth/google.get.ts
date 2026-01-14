@@ -5,11 +5,20 @@ export default defineOAuthGoogleEventHandler({
     });
 
     if (dbUser) {
-      // Update googleId and avatar if missing or changed
-      if (!dbUser.googleId || !dbUser.avatarUrl) {
+      // Update googleId and avatar if missing
+      const updates: { googleId?: string; avatarUrl?: string } = {};
+
+      if (!dbUser.googleId) {
+        updates.googleId = user.sub;
+      }
+      if (!dbUser.avatarUrl) {
+        updates.avatarUrl = user.picture;
+      }
+
+      if (Object.keys(updates).length > 0) {
         dbUser = await prisma.user.update({
           where: { id: dbUser.id },
-          data: { googleId: user.sub, avatarUrl: user.picture },
+          data: updates,
         });
       }
     } else {
