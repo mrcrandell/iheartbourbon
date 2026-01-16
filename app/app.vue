@@ -16,7 +16,7 @@ watch(
       authStore.logout();
     }
   },
-  { immediate: true },
+  { immediate: true }
 );
 </script>
 

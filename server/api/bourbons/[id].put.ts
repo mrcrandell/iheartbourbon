@@ -1,10 +1,20 @@
 import { prisma } from "../../utils/prisma";
+import { bourbonValidation } from "../../../shared/utils/validation";
 
 export default defineEventHandler(async (event) => {
   const session = await requireUserSession(event);
   const id = getRouterParam(event, "id");
   const body = await readBody(event);
-  const { name, imageUrl } = body;
+
+  const { error, value } = bourbonValidation.validate(body);
+  if (error) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: error.message,
+    });
+  }
+
+  const { name, imageUrl } = value;
 
   if (!id) {
     throw createError({

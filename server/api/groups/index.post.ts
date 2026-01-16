@@ -26,7 +26,7 @@ export default defineEventHandler(async (event) => {
         name,
         slug,
         creatorId: session.user.id,
-        members: {
+        groupUsers: {
           create: {
             userId: session.user.id,
             role: "ADMIN",

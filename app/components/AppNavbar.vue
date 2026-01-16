@@ -23,6 +23,15 @@ function handleLogout() {
   // router.push("/admin-login");
 }
 
+function checkAuth() {
+  if (!authStore.isAuthenticated) {
+    openAuthModal("login");
+  } else {
+    // handleLogout();
+    console.log("User is authenticated");
+  }
+}
+
 onMounted(() => {
   console.log(authStore.user);
 });
@@ -31,31 +40,32 @@ onMounted(() => {
 <template>
   <nav class="navbar">
     <ul class="nav">
-      <li class="nav-item">
-        <NuxtLink class="nav-link" to="/">Home</NuxtLink>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#services">Services</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#contact-us">Contact Us</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" href="#about-us">About Us</a>
-      </li>
-      <li v-if="!authStore.isAuthenticated" class="nav-item">
-        <button class="nav-link btn-link" @click="openAuthModal('login')">
-          Login
+      <template v-if="authStore.isAuthenticated">
+        <li class="nav-item">
+          <NuxtLink class="nav-link" to="/">
+            <IconHome />
+          </NuxtLink>
+        </li>
+        <li class="nav-item">
+          <NuxtLink class="nav-link" to="/group">
+            <IconGroup />
+          </NuxtLink>
+        </li>
+        <li class="nav-item">
+          <NuxtLink class="nav-link" to="/bourbon/add">
+            <IconPlus />
+          </NuxtLink>
+        </li>
+        <li class="nav-item">
+          <NuxtLink class="nav-link" to="/my-account">
+            <IconUser />
+          </NuxtLink>
+        </li>
+      </template>
+      <li v-else class="nav-item">
+        <button class="nav-link" @click="openAuthModal('login')">
+          Login / Register
         </button>
-      </li>
-      <li v-if="!authStore.isAuthenticated" class="nav-item">
-        <button class="nav-link btn-link" @click="openAuthModal('register')">
-          Register
-        </button>
-      </li>
-      <li>{{ authStore.user }} {{ user }}</li>
-      <li v-if="authStore.isAuthenticated">
-        <button class="dropdown-item" @click="handleLogout">Logout</button>
       </li>
     </ul>
 
@@ -87,13 +97,22 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 // Button reset for nav link style
-button.nav-link {
+.nav-link {
   background: none;
   border: none;
   width: 100%;
   cursor: pointer;
   font-family: inherit;
   font-size: inherit;
+  color: $white;
+  background-color: transparent;
+  svg {
+    display: block;
+    width: rem(50);
+    height: rem(50);
+    margin: 0 auto;
+    fill: currentColor;
+  }
 }
 
 .auth-tabs {
@@ -155,8 +174,8 @@ nav.navbar {
     justify-content: center;
     .nav-item {
       flex: 1;
-      > a,
-      > a:focus {
+      > .nav-link,
+      > .nav-link:focus {
         display: block;
         padding: 1.25rem 1rem;
         color: #fff;

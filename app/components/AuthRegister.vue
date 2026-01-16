@@ -107,6 +107,7 @@ async function submitForm() {
           type="text"
           class="form-control"
           :class="{ 'is-invalid': errors.name }"
+          placeholder="Enter your name"
         />
         <div v-if="errors.name" class="invalid-feedback">
           {{ errors.name }}
@@ -114,13 +115,14 @@ async function submitForm() {
       </div>
 
       <div class="form-group">
-        <label class="form-label" for="email">Email</label>
+        <label class="form-label" for="email">Email address</label>
         <input
           id="email"
           v-model="form.email"
           type="email"
           class="form-control"
           :class="{ 'is-invalid': errors.email }"
+          placeholder="Enter your email"
         />
         <div v-if="errors.email" class="invalid-feedback">
           {{ errors.email }}
@@ -135,6 +137,7 @@ async function submitForm() {
           type="password"
           class="form-control"
           :class="{ 'is-invalid': errors.password }"
+          placeholder="Enter your password"
         />
         <div v-if="errors.password" class="invalid-feedback">
           {{ errors.password }}

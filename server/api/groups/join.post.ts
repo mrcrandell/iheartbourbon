@@ -24,9 +24,9 @@ export default defineEventHandler(async (event) => {
   }
 
   // Check if already a member
-  const existingMember = await prisma.groupMember.findUnique({
+  const existingMember = await prisma.groupUser.findUnique({
     where: {
-      groupId_userId: {
+      userId_groupId: {
         groupId: group.id,
         userId: session.user.id,
       },
@@ -41,7 +41,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    await prisma.groupMember.create({
+    await prisma.groupUser.create({
       data: {
         userId: session.user.id,
         groupId: group.id,

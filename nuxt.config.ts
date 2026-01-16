@@ -27,8 +27,12 @@ export default defineNuxtConfig({
     },
   },
 
-  css: [
-    "~/assets/scss/base.scss",
+  components: [
+    // ~/components/icons/IconArrowLeft.vue => <IconArrowLeft />
+    { path: "~/components/icons", pathPrefix: false },
+    // It's important that this comes last if you have overrides you wish to apply
+    // to sub-directories of `~/components`.
+    "~/components",
   ],
 
   vite: {

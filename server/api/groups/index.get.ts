@@ -3,7 +3,7 @@ import { prisma } from "../../utils/prisma";
 export default defineEventHandler(async (event) => {
   const session = await requireUserSession(event);
 
-  const memberships = await prisma.groupMember.findMany({
+  const memberships = await prisma.groupUser.findMany({
     where: {
       userId: session.user.id,
     },
@@ -11,20 +11,19 @@ export default defineEventHandler(async (event) => {
       group: {
         include: {
           _count: {
-            select: { members: true },
+            select: { groupUsers: true },
           },
         },
       },
     },
     orderBy: {
-      joinedAt: "desc",
+      createdAt: "desc",
     },
   });
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return memberships.map((m: any) => ({
     ...m.group,
     role: m.role, // Include their role in that group
-    memberCount: m.group._count.members,
+    memberCount: m.group._count.groupUsers,
   }));
 });

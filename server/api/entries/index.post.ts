@@ -1,21 +1,24 @@
 import { prisma } from "../../utils/prisma";
+import { entryValidation } from "../../../shared/utils/validation";
 
 export default defineEventHandler(async (event) => {
   const session = await requireUserSession(event);
   const body = await readBody(event);
-  const { bourbonId, isThumbsUp, rating, comment, groupIds } = body;
 
-  if (!bourbonId) {
+  const { error, value } = entryValidation.validate(body);
+  if (error) {
     throw createError({
       statusCode: 400,
-      statusMessage: "Bourbon is required",
+      statusMessage: error.message,
     });
   }
+
+  const { bourbonId, isThumbsUp, rating, comment, groupIds } = value;
 
   // Verify group memberships if groupIds are provided
   let validGroupIds: string[] = [];
   if (groupIds && Array.isArray(groupIds) && groupIds.length > 0) {
-    const memberships = await prisma.groupMember.findMany({
+    const memberships = await prisma.groupUser.findMany({
       where: {
         userId: session.user.id,
         groupId: { in: groupIds },
@@ -33,13 +36,17 @@ export default defineEventHandler(async (event) => {
         isThumbsUp: !!isThumbsUp,
         rating: Number(rating) || 0,
         comment: comment || "",
-        groups: {
-          connect: validGroupIds.map((id) => ({ id })),
+        groupEntries: {
+          create: validGroupIds.map((groupId) => ({ groupId })),
         },
       },
       include: {
         bourbon: true,
-        groups: true,
+        groupEntries: {
+          include: {
+            group: true,
+          },
+        },
       },
     });
 

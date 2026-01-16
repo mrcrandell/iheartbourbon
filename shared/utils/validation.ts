@@ -36,3 +36,44 @@ export const loginValidation = Joi.object({
     "any.required": "Please enter your password.",
   }),
 });
+
+export const bourbonValidation = Joi.object({
+  name: Joi.string().trim().required().messages({
+    "string.empty": "Please enter a bourbon name.",
+    "any.required": "Please enter a bourbon name.",
+  }),
+  imageUrl: Joi.string().uri().allow("").optional().messages({
+    "string.uri": "Please enter a valid URL.",
+  }),
+});
+
+export const entryValidation = Joi.object({
+  rating: Joi.number().integer().min(1).max(5).required().messages({
+    "number.min": "Rating must be at least 1.",
+    "number.max": "Rating must be at most 5.",
+    "any.required": "Please select a rating.",
+  }),
+  isThumbsUp: Joi.boolean().required().messages({
+    "any.required": "Please select thumbs up or down.",
+  }),
+  comment: Joi.string().allow("").optional(),
+  bourbonId: Joi.string().uuid().required().messages({
+    "any.required": "Bourbon ID is required.",
+  }),
+  groupIds: Joi.array().items(Joi.string()).optional(),
+});
+
+export const bourbonAndEntryValidation = bourbonValidation.concat(
+  Joi.object({
+    rating: Joi.number().integer().min(1).max(5).required().messages({
+      "number.min": "Rating must be at least 1.",
+      "number.max": "Rating must be at most 5.",
+      "any.required": "Please select a rating.",
+    }),
+    isThumbsUp: Joi.boolean().required().messages({
+      "any.required": "Please select thumbs up or down.",
+    }),
+    comment: Joi.string().allow("").optional(),
+    groupIds: Joi.array().items(Joi.string()).optional(),
+  }),
+);
