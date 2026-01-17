@@ -4,6 +4,7 @@ const { loggedIn, user, session, fetch, clear, openInPopup } = useUserSession();
 
 const authStore = useAuthStore();
 const router = useRouter();
+const route = useRoute();
 
 const isAuthModalOpen = ref(false);
 const authTab = ref<"login" | "register">("login");
@@ -17,10 +18,17 @@ function closeAuthModal() {
   isAuthModalOpen.value = false;
 }
 
+async function handleAuthSuccess() {
+  closeAuthModal();
+  if (route.query.redirect) {
+    await navigateTo(route.query.redirect as string);
+  }
+}
+
 function handleLogout() {
   authStore.logout();
   clear();
-  // router.push("/admin-login");
+  router.push("/");
 }
 
 function checkAuth() {
@@ -33,7 +41,9 @@ function checkAuth() {
 }
 
 onMounted(() => {
-  console.log(authStore.user);
+  if (route.query.redirect && !authStore.isAuthenticated) {
+    openAuthModal("login");
+  }
 });
 </script>
 
@@ -89,8 +99,8 @@ onMounted(() => {
         </div>
         <button class="btn-close" @click="closeAuthModal">X</button>
       </template>
-      <AuthLogin v-if="authTab === 'login'" @success="closeAuthModal" />
-      <AuthRegister v-else @success="closeAuthModal" />
+      <AuthLogin v-if="authTab === 'login'" @success="handleAuthSuccess" />
+      <AuthRegister v-else @success="handleAuthSuccess" />
     </BaseModal>
   </nav>
 </template>
