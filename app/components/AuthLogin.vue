@@ -5,6 +5,7 @@ import { useAuthStore } from "~/stores/auth";
 
 const emit = defineEmits(["success"]);
 const authStore = useAuthStore();
+const { fetch: refreshSession } = useUserSession();
 
 const form = ref({
   email: "",
@@ -54,14 +55,14 @@ async function submitForm() {
 
     authStore.login(user);
 
+    await refreshSession();
+
     alert.value = {
       show: true,
       status: "success",
       message: "Logged in successfully!",
     };
     emit("success");
-    // Reload to refresh session
-    window.location.reload();
   } catch (err: unknown) {
     const error = err as { data?: { statusMessage?: string } };
     alert.value = {
