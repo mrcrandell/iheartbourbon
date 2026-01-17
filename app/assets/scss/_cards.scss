@@ -257,3 +257,27 @@
     }
   }
 }
+
+.form-card {
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.item-card {
+  padding: 1rem;
+  background: white;
+  border-bottom: 1px solid #e0e0e0;
+  transition: all 0.2s;
+}
+
+.item-card:last-child {
+  border-bottom: none;
+}
+
+.item-card:hover {
+  background-color: #f8f9fa;
+  border-left: 4px solid var(--primary, #0066cc);
+}

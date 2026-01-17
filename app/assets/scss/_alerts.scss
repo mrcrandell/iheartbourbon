@@ -23,3 +23,13 @@
   background-color: tint-color($danger, 80%);
   border-color: tint-color($danger, 60%);
 }
+
+.alert-error {
+  @extend .alert-danger;
+}
+
+.alert-info {
+  color: #0c5460;
+  background-color: #d1ecf1;
+  border-color: #bee5eb;
+}

@@ -15,7 +15,6 @@ export default defineEventHandler(async (event) => {
 
   const existingEntry = await prisma.entry.findUnique({
     where: { id },
-    include: { groups: true },
   });
 
   if (!existingEntry) {
@@ -36,7 +35,7 @@ export default defineEventHandler(async (event) => {
   let groupUpdateOp = undefined;
   if (groupIds && Array.isArray(groupIds)) {
     // Verify membership for new groups
-    const memberships = await prisma.groupMember.findMany({
+    const memberships = await prisma.groupUser.findMany({
       where: {
         userId: session.user.id,
         groupId: { in: groupIds },
@@ -44,7 +43,10 @@ export default defineEventHandler(async (event) => {
       select: { groupId: true },
     });
     const validGroupIds = memberships.map((m) => m.groupId);
-    groupUpdateOp = { set: validGroupIds.map((id) => ({ id })) };
+    groupUpdateOp = {
+      deleteMany: {},
+      create: validGroupIds.map((groupId) => ({ groupId })),
+    };
   }
 
   try {
@@ -54,15 +56,24 @@ export default defineEventHandler(async (event) => {
         isThumbsUp: isThumbsUp !== undefined ? !!isThumbsUp : undefined,
         rating: rating !== undefined ? Number(rating) : undefined,
         comment: comment !== undefined ? comment : undefined,
-        groups: groupUpdateOp,
+        groupEntries: groupUpdateOp,
       },
       include: {
-        groups: true,
+        groupEntries: {
+          include: {
+            group: true,
+          },
+        },
         bourbon: true,
       },
     });
 
-    return { entry: updatedEntry };
+    return {
+      entry: {
+        ...updatedEntry,
+        groups: updatedEntry.groupEntries.map((ge) => ge.group),
+      },
+    };
   } catch (error) {
     console.error("Update entry error:", error);
     throw createError({

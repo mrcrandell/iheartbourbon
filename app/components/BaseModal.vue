@@ -44,7 +44,7 @@ watch(
       }
       setTimeout(() => {
         isShownComplete.value = true;
-      }, 250);
+      }, 250); // Changed from 100ms to 250ms to match the modal backdrop display time
     } else {
       enableScroll();
       isShownComplete.value = false;
@@ -54,31 +54,29 @@ watch(
 </script>
 
 <template>
-  <Teleport to="body">
-    <Transition name="modal-fade">
-      <div
-        v-if="isShown"
-        class="modal"
-        tabindex="-1"
-        :class="{ show: isShownComplete }"
-        @click.self="closeFromMask"
-      >
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div v-if="slots.header" class="modal-header">
-              <slot name="header" />
-            </div>
-            <div class="modal-body">
-              <slot />
-            </div>
-            <div v-if="slots.footer" class="modal-footer">
-              <slot name="footer" />
-            </div>
+  <Transition name="modal-fade">
+    <div
+      v-if="isShown"
+      class="modal"
+      tabindex="-1"
+      :class="{ show: isShownComplete }"
+      @click.self="closeFromMask"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div v-if="slots.header" class="modal-header">
+            <slot name="header"></slot>
+          </div>
+          <div class="modal-body">
+            <slot></slot>
+          </div>
+          <div v-if="slots.footer" class="modal-footer">
+            <slot name="footer"></slot>
           </div>
         </div>
       </div>
-    </Transition>
-  </Teleport>
+    </div>
+  </Transition>
 </template>
 
 <style lang="scss" scoped>

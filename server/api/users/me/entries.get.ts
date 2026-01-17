@@ -15,11 +15,25 @@ export default defineEventHandler(async (event) => {
           imageUrl: true,
         },
       },
+      groupEntries: {
+        include: {
+          group: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      },
     },
     orderBy: {
       createdAt: "desc",
     },
   });
 
-  return { entries };
+  return {
+    entries: entries.map((entry) => ({
+      ...entry,
+      groups: entry.groupEntries.map((ge) => ge.group),
+    })),
+  };
 });
