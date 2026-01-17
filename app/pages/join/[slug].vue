@@ -54,7 +54,7 @@ async function joinGroup() {
 
       <div v-else class="join-card form-card">
         <h1 class="page-title text-center">Join Group</h1>
-        
+
         <div class="invite-details">
           <p class="invite-text">You have been invited to join:</p>
           <h2 class="group-name">{{ group.name }}</h2>
@@ -80,10 +80,8 @@ async function joinGroup() {
             <span v-if="joining" class="spinner spinner-sm" />
             Join Group
           </button>
-          
-          <NuxtLink to="/" class="btn btn-outline w-100">
-            Cancel
-          </NuxtLink>
+
+          <NuxtLink to="/" class="btn btn-outline w-100"> Cancel </NuxtLink>
         </div>
       </div>
     </div>

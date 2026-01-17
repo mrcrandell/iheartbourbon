@@ -1,11 +1,12 @@
-import { prisma } from "../../../server/utils/prisma";
+import { prisma } from "../../utils/prisma";
 import bcrypt from "bcrypt";
+import { registrationValidation } from "../../../shared/utils/validation";
 
 export default defineEventHandler(async (event) => {
   const body = await readBody(event);
 
   // Validate body with Joi
-  const { error, value } = registrationSchema.validate(body);
+  const { error, value } = registrationValidation.validate(body);
   if (error) {
     throw createError({
       statusCode: 400,

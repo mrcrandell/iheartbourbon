@@ -3,7 +3,9 @@ definePageMeta({
   middleware: ["auth" as any],
 });
 
-const { user, fetch: refreshSession } = useUserSession();
+const { user, fetch: refreshSession, clear: clearSession } = useUserSession();
+const authStore = useAuthStore();
+const router = useRouter();
 
 const {
   data,
@@ -175,6 +177,12 @@ async function changePassword() {
   } finally {
     passwordLoading.value = false;
   }
+}
+
+function handleLogout() {
+  authStore.logout();
+  clearSession();
+  router.push("/");
 }
 </script>
 
@@ -356,6 +364,10 @@ async function changePassword() {
           </form>
         </div>
       </div>
+
+      <div class="logout-section">
+        <button class="btn btn-logout" @click="handleLogout">Log Out</button>
+      </div>
     </div>
 
     <BaseModal
@@ -490,6 +502,27 @@ async function changePassword() {
   justify-content: flex-end;
   gap: 1rem;
   width: 100%;
+}
+
+.logout-section {
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-color, #eaeaea);
+  display: flex;
+  justify-content: center;
+}
+
+.btn-logout {
+  min-width: 200px;
+  background-color: transparent;
+  border: 1px solid #dc3545;
+  color: #dc3545;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: #dc3545;
+    color: white;
+  }
 }
 
 .edit-review-modal {
