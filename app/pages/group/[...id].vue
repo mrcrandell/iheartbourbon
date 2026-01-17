@@ -7,6 +7,7 @@ definePageMeta({
 
 const route = useRoute();
 const router = useRouter();
+const config = useRuntimeConfig();
 
 const groupId = computed(() => {
   const id = route.params.id;
@@ -26,7 +27,7 @@ const averageRating = computed(() => group.value?.averageRating || 0);
 const showQRModal = ref(false);
 const joinUrl = computed(() => {
   if (!group.value) return "";
-  return `${window.location.origin}/join/${group.value.slug}`;
+  return `${config.public.siteUrl}/join/${group.value.slug}`;
 });
 
 // Entry Modal

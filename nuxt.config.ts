@@ -25,6 +25,11 @@ export default defineNuxtConfig({
         clientSecret: "",
       },
     },
+    public: {
+      // Add site URL for easy access in components
+      siteUrl: process.env.NUXT_PUBLIC_SITE_URL ||
+        "https://www.iheartbourbon.com",
+    },
   },
 
   components: [
